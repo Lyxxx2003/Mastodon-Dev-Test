@@ -13,10 +13,10 @@ class UserSettings
   setting :noindex, default: -> { ::Setting.noindex }
   setting :show_application, default: true
   setting :wants_verified_identity, default: true
-  setting :omit_age, default: true
+  setting :omit_age, default: false
   setting :omit_location, default: false
-  setting :omit_pronouns, default: true
-  setting :display_your_public_identity_profile, default: true
+  setting :omit_pronouns, default: false
+  setting :display_your_public_identity_profile, default: false
   setting :display_personal_information, default: false
   setting :display_verified_contact_information, default: false
   setting :display_public_social_properties, default: false

@@ -13,6 +13,8 @@ class AccountsController < ApplicationController
 
   skip_around_action :set_locale, if: -> { [:json, :rss].include?(request.format&.to_sym) }
   skip_before_action :require_functional!, unless: :limited_federation_mode?
+  
+  @verify_url = ""
 
   def show
     respond_to do |format|
@@ -44,8 +46,7 @@ class AccountsController < ApplicationController
           profile_data = JSON.parse(response.body)
 
           if profile_data['type'] == 'error' && profile_data['title'] == 'Member Unknown'
-            # Perform actions when member is unknown
-            Rails.logger.info('Member is unknown. Fetching a key to make a smart confirmation link...')
+            # Unknown so we are going to fetch a token and build a smart confirmation link
           else
             Rails.logger.info('Member is found...')
 

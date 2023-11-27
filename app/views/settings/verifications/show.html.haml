@@ -11,7 +11,7 @@
   %p.lead= "Verify Using A Privacy Forward, Portable Identity That Works Across Federated Instances."
 
   %h4= t('verification.here_is_how')
-  %p.lead= "Confirm ownership of a variety of everyday services such as blogs and social networks; more digital footprints means more trust and confidence."
+  %p.lead= "Confirm ownership of a variety of everyday services such as blogs and social networks; more digital footprints means more confidence."
 
   %h3= t('verification.turn_on_verified_identity')
 
@@ -19,6 +19,14 @@
     %label
     = f.simple_fields_for :settings, current_user.settings do |ff|
       .fields-group
+        .input-copy.lead
+          .input-copy__wrapper
+          - if @verify_url.present?
+            %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Securly Assign Account Ownership' }
+            %button{ type: :button, 'data-url': @verify_url, class: 'btn btn-primary verify-btn' }= 'Verify'
+          - else
+            %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Your Account Identity Has Been Successfully Confirmed' }
+
         = ff.input :wants_verified_identity, wrapper: :with_label, hint: t('verification.verified_identity_is_the_single_most_powerful_thing_you_can_do_to_amplify_your_profile')
 
       %h3= t('verification.privacy_settings')
@@ -30,13 +38,13 @@
             = ff.input :display_your_public_identity_profile, wrapper: :with_label, hint: t('verification.privacy_is_your_choice_knowing_your_rank_and_score_make_you_visibly_trusted')
             = ff.input :display_public_social_properties, wrapper: :with_label, hint: t('verification.showcase_public_links_and_properties_you_want_others_to_see_and_share')
           .fields-group
-            = ff.input :display_verified_contact_information, wrapper: :with_label, hint: t('verification.verified_contact_details_helps_others_know_you_and_reach_you')
+            = ff.input :display_verified_contact_information, wrapper: :with_label
           .fields-group
             = ff.input :display_personal_information, wrapper: :with_label
-            = ff.input :omit_age, wrapper: :with_label, hint: t('verification.do_not_display_age_related_information')
-            = ff.input :omit_pronouns, wrapper: :with_label, hint: t('verification.do_not_display_gender_related_information')
-            = ff.input :omit_location, wrapper: :with_label, hint: t('verification.do_not_display_location_related_information')
-
+            .fields-group
+              = ff.input :omit_age, wrapper: :with_label, hint: t('verification.do_not_display_age_related_information')
+              = ff.input :omit_pronouns, wrapper: :with_label, hint: t('verification.do_not_display_gender_related_information')
+              = ff.input :omit_location, wrapper: :with_label, hint: t('verification.do_not_display_location_related_information')
 
   %p.lead= "Verify Using The Standard Mastodon Way"
 
@@ -62,3 +70,24 @@
   .actions
     %button{ type: :submit, class: 'button' }
       = t('generic.save_changes')
+
+:javascript
+  // Add your JavaScript here
+  document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      if (target.classList.contains('verify-btn')) {
+        e.preventDefault();
+        var url = target.dataset.url;
+        var left = (window.innerWidth);
+        var top = (window.innerHeight / 2) - (900 / 2);
+        var win = window.open(url, "ta-popup", "width=480, height=820, top=" + top + ", left=" + left);
+        var timer = setInterval(function() {
+          if (win.closed) {
+            clearInterval(timer);
+            window.location.reload(); //refresh when the window closes
+          }
+        }, 1000);
+      }
+    });
+  });
