@@ -10,6 +10,8 @@ class Settings::VerificationsController < Settings::BaseController
     tru_anon_service.verify_user
 
     @verify_url = tru_anon_service.get_verify_url
+    @public_profile_url = tru_anon_service.get_public_profile_url
+
   end
 
   def update
