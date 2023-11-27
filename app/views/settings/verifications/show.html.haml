@@ -14,18 +14,18 @@
   %p.lead= "Confirm ownership of a variety of everyday services such as blogs and social networks; more digital footprints means more confidence."
 
   %h3= t('verification.turn_on_verified_identity')
-
+  
   .fields-group
     %label
     = f.simple_fields_for :settings, current_user.settings do |ff|
       .fields-group
         .input-copy.lead
           .input-copy__wrapper
-          - if @verify_url.present?
+          - if @verify_url.present? && @verify_url.length > 0
             %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Securly Assign Account Ownership' }
             %button{ type: :button, 'data-url': @verify_url, class: 'btn btn-primary verify-btn' }= 'Verify'
           - else
-            %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Your Account Identity Has Been Successfully Confirmed' }
+            %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Your Account Identity Is Successfully Confirmed' }
 
         = ff.input :wants_verified_identity, wrapper: :with_label, hint: t('verification.verified_identity_is_the_single_most_powerful_thing_you_can_do_to_amplify_your_profile')
 
@@ -79,8 +79,8 @@
       if (target.classList.contains('verify-btn')) {
         e.preventDefault();
         var url = target.dataset.url;
-        var left = (window.innerWidth);
-        var top = (window.innerHeight / 2) - (900 / 2);
+        var left = (window.innerWidth)- (480 / 2);
+        var top = (window.innerHeight / 2) - (820 / 2);
         var win = window.open(url, "ta-popup", "width=480, height=820, top=" + top + ", left=" + left);
         var timer = setInterval(function() {
           if (win.closed) {
