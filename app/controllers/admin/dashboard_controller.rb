@@ -14,5 +14,8 @@ module Admin
       @pending_tags_count    = Tag.pending_review.count
       @pending_appeals_count = Appeal.pending.count
     end
+    def verified_identity
+      render plain: 'Verified Identity Configuration Page'
+    end
   end
 end

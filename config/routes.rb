@@ -47,6 +47,17 @@ Rails.application.routes.draw do
 
   root 'home#index'
 
+  # config/routes.rb for verified ID
+  get '/admin/verified_identity', to: 'admin/verified_identity#index'
+
+  # config/routes.rb
+
+  namespace :settings do
+    resource :verification, only: [:show, :update]
+  end
+  
+  get '/verification', to: redirect('/settings/verification')
+
   mount LetterOpenerWeb::Engine, at: 'letter_opener' if Rails.env.development?
 
   get 'health', to: 'health#show'

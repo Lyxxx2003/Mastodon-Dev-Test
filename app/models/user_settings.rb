@@ -12,6 +12,14 @@ class UserSettings
   setting :theme, default: -> { ::Setting.theme }
   setting :noindex, default: -> { ::Setting.noindex }
   setting :show_application, default: true
+  setting :wants_verified_identity, default: true
+  setting :omit_age, default: true
+  setting :omit_location, default: false
+  setting :omit_pronouns, default: true
+  setting :display_your_public_identity_profile, default: true
+  setting :display_personal_information, default: false
+  setting :display_verified_contact_information, default: false
+  setting :display_public_social_properties, default: false
   setting :default_language, default: nil
   setting :default_sensitive, default: false
   setting :default_privacy, default: nil, in: %w(public unlisted private)

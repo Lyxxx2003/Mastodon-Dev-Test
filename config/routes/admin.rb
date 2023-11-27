@@ -3,6 +3,12 @@
 namespace :admin do
   get '/dashboard', to: 'dashboard#index'
 
+  resources :dashboard do
+    member do
+      get :verified_identity
+    end
+  end
+
   resources :domain_allows, only: [:new, :create, :destroy]
   resources :domain_blocks, only: [:new, :create, :destroy, :update, :edit] do
     collection do

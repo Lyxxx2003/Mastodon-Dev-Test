@@ -9,23 +9,16 @@ module Admin
     end
 
     def update
-      authorize :settings, :update?
-
-      @admin_settings = Form::AdminSettings.new(settings_params)
-
-      if @admin_settings.save
-        flash[:notice] = I18n.t('generic.changes_saved_msg')
-        redirect_to after_update_redirect_path
+      puts "Update action called!"
+      if @account.update(verifications_params)
+        redirect_to settings_verification_path, notice: 'Successfully updated.'
       else
+        flash[:error] = 'Error saving changes. Please try again.'
         render :show
       end
     end
 
     private
-
-    def after_update_redirect_path
-      raise NotImplementedError
-    end
 
     def settings_params
       params.require(:form_admin_settings).permit(*Form::AdminSettings::KEYS)
