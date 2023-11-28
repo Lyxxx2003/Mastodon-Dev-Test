@@ -11,7 +11,7 @@
   %p.lead= "Verify Using A Privacy Forward, Portable Identity That Works Across Federated Instances."
 
   %h4= t('verification.here_is_how')
-  %p.lead= "Confirm ownership of a variety of everyday services such as blogs and social networks; more digital footprints means more confidence."
+  %p.lead= "Confirm ownership over public links and profiles, such as blogs and social networks. More digital footprints means more confidence."
 
   %h3= t('verification.turn_on_verified_identity')
   
@@ -22,12 +22,11 @@
         .input-copy.lead
           .input-copy__wrapper
           - if @verify_url.present? && @verify_url.length > 0
-            %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Securly Assign Account Ownership' }
+            %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Securely Assign Account Owner' }
             %button{ type: :button, 'data-url': @verify_url, class: 'btn btn-primary verify-btn' }= 'Verify'
           - else
-            %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Your Account Identity Is Successfully Confirmed' }
+            %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Your Account Identity Is Securely Assigned' }
             %button{ type: :button, onclick: "window.open('https://#{@public_profile_url}', '_blank')", class: 'btn btn-primary' }= @public_profile_url
-
 
         = ff.input :wants_verified_identity, wrapper: :with_label, hint: t('verification.verified_identity_is_the_single_most_powerful_thing_you_can_do_to_amplify_your_profile')
 
@@ -44,11 +43,11 @@
           .fields-group
             = ff.input :display_personal_information, wrapper: :with_label
             .fields-group
-              = ff.input :omit_age, wrapper: :with_label, hint: t('verification.do_not_display_age_related_information')
+              = ff.input :omit_age, wrapper: :with_label, hint: t('verification.do_not_show_age_related_information')
               = ff.input :omit_pronouns, wrapper: :with_label, hint: t('verification.do_not_display_gender_related_information')
-              = ff.input :omit_location, wrapper: :with_label, hint: t('verification.do_not_display_location_related_information')
+              = ff.input :omit_location, wrapper: :with_label, hint: t('verification.do_not_display_geographic_information')
 
-  %p.lead= "Verify Using The Standard Mastodon Way"
+  %p.lead= t('verify_using_traditional_mastodon_verification')
 
   %h4= t('verification.here_is_how')
   %p.lead= t('verification.instructions_html')

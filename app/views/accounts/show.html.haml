@@ -70,9 +70,9 @@
       var badgeLinkText = linkText ? linkText : "Unknown";
       // Check if the linkText is a valid URL
       if (isValidURL("https://" + badgeLinkText)) {
-        badgeLink.innerHTML = `<span><i class="${title.includes("Unknown") ? "" : "fa fa-check verified__mark"} "></i></span> <span><a href="https://${badgeLinkText}" target="_blank" rel="nofollow noopener noreferrer me" translate="no"><span class="invisible">https://</span><span class="">${badgeLinkText}</span><span class="invisible"></span></a></span>`;
+        badgeLink.innerHTML = `<span><i class="${title.includes("Unknown") ? "" : "fa fa-check-circle"} "></i></span> <span><a href="https://${badgeLinkText}" target="_blank" rel="nofollow noopener noreferrer me" translate="no"><span class="invisible">https://</span><span class="">${badgeLinkText}</span><span class="invisible"></span></a></span>`;
       } else {
-        badgeLink.innerHTML = `<i class="${title.includes("Unknown") ? "" : "fa fa-check verified__mark"} "></i>${badgeLinkText}</span>`;
+        badgeLink.innerHTML = `<i class="${title.includes("Unknown") ? "" : "fa fa-check-circle"} "></i>${badgeLinkText}</span>`;
       }
 
       badgeLine.appendChild(badgeLink);
