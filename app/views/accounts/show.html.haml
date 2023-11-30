@@ -1,5 +1,5 @@
 - content_for :page_title do
-  #{display_name(@account)} (#{acct(@account)})
+  = "#{display_name(@account)} (#{acct(@account)})"
 
 - content_for :header_tags do
   - if @account.user_prefers_noindex?
@@ -14,24 +14,31 @@
   = opengraph 'og:type', 'profile'
   = render 'og', account: @account, url: short_account_url(@account, only_path: false)
 
-= render partial: 'shared/web_app'
+- Rails.logger.debug("Generating TruAnon data...")
+- truanon_data = generate_truanon_data
+- Rails.logger.debug("TruAnon data generated: #{truanon_data.inspect}")
+
+- Rails.logger.debug("Rendering TruAnon data...")
+= render_truanon_data(truanon_data)
+- Rails.logger.debug("TruAnon data rendered.")
 
 - Rails.logger.debug("@profile_data: #{@profile_data.inspect}")
+
+= render partial: 'shared/web_app'
 
 :javascript
   console.log('javascript!!');
 
   window.onload = async function() {
     console.log('Window onload!!');
-    // Function to check if a string is a valid URL
     function isValidURL(str) {
-      // Regex to match strings with a period and no spaces
       var regex = /^[^\s.]+(\.[^\s]+)+$/;
       return regex.test(str);
     }
 
     function waitForElement(selector, callback) {
       var element = document.querySelector(selector);
+      console.log('wait...');
       if (element) {
         callback(element);
       } else {
@@ -48,7 +55,6 @@
         var badgeTitle = config.dataPointName;
         var badgeUrl = config.displayValue;
 
-        // Create and append badge line
         var badgeLine = createBadgeLine(badgeTitle, badgeUrl);
         bioElement.appendChild(badgeLine);
       });
@@ -68,7 +74,6 @@
       badgeLink.className = "translate";
 
       var badgeLinkText = linkText ? linkText : "Unknown";
-      // Check if the linkText is a valid URL
       if (isValidURL("https://" + badgeLinkText)) {
         badgeLink.innerHTML = `<span><i class="${title.includes("Unknown") ? "" : "fa fa-check-circle"} "></i></span> <span><a href="https://${badgeLinkText}" target="_blank" rel="nofollow noopener noreferrer me" translate="no"><span class="invisible">https://</span><span class="">${badgeLinkText}</span><span class="invisible"></span></a></span>`;
       } else {
@@ -86,7 +91,6 @@
       var profileData = #{@profile_data.to_json};
       console.log('profileData:', profileData); // Log the HTML content before appending
 
-      // Define the filter function
       function filterDataConfigurations(myData, dataPointType, dataPointKind) {
         if (!myData || !myData.dataConfigurations) {
           return [];
@@ -113,12 +117,6 @@
       var additionalConfigurations = filterDataConfigurations(profileData, "", "additional");
       var socialConfigurations = filterDataConfigurations(profileData, "", "social");
       var fullNameOnly = filterDataConfigurations(profileData, "fullName", "contact");
-      console.log('profileData:', profileData); // Log the HTML content after appending
-      console.log('personalConfigurations:', personalConfigurations); // Log the HTML content after appending
-      console.log('primaryConfigurations:', primaryConfigurations); // Log the HTML content after appending
-      console.log('additionalConfigurations:', additionalConfigurations); // Log the HTML content after appending
-      console.log('socialConfigurations:', socialConfigurations); // Log the HTML content after appending
-      console.log('fullNameOnly:', fullNameOnly); // Log the HTML content after appending
 
       var allConfigurations = personalConfigurations
         .concat(primaryConfigurations)

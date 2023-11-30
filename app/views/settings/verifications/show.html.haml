@@ -8,9 +8,12 @@
 = simple_form_for @account, url: settings_verification_path, html: { method: :put } do |f|
   = render 'shared/error_messages', object: @account
 
+  %p.lead= t('verification.hint_html')
+
   %p.lead= "Verify Using A Privacy Forward, Portable Identity That Works Across Federated Instances."
 
   %h4= t('verification.here_is_how')
+
   %p.lead= "Confirm ownership over public links and profiles, such as blogs and social networks. More digital footprints means more confidence."
 
   %h3= t('verification.turn_on_verified_identity')
@@ -22,7 +25,7 @@
         .input-copy.lead
           .input-copy__wrapper
           - if @verify_url.present? && @verify_url.length > 0
-            %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Securely Assign Account Owner' }
+            %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Securely Assign Ownership' }
             %button{ type: :button, 'data-url': @verify_url, class: 'btn btn-primary verify-btn' }= 'Verify'
           - else
             %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Your Account Identity Is Securely Assigned' }
@@ -47,9 +50,12 @@
               = ff.input :omit_pronouns, wrapper: :with_label, hint: t('verification.do_not_display_gender_related_information')
               = ff.input :omit_location, wrapper: :with_label, hint: t('verification.do_not_display_geographic_information')
 
-  %p.lead= t('verify_using_traditional_mastodon_verification')
+  %hr.spacer/
+
+  %p.lead= t('verification.verify_manually_using_standard_mastodon_process')
 
   %h4= t('verification.here_is_how')
+
   %p.lead= t('verification.instructions_html')
 
   .input-copy.lead
@@ -73,7 +79,6 @@
       = t('generic.save_changes')
 
 :javascript
-  // Add your JavaScript here
   document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(e) {
       var target = e.target;

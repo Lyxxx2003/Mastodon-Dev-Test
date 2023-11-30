@@ -4,6 +4,10 @@ class TruAnonService
     @account = account
     @service_name = ENV['TRU_ANON_SERVICE_NAME']
     @private_key = ENV['TRU_ANON_PRIVATE_KEY']
+
+    if @service_name.blank? || @private_key.blank?
+      raise StandardError, 'TRU_ANON_SERVICE_NAME and TRU_ANON_PRIVATE_KEY must be set'
+    end
   end
 
   def get_profile
@@ -25,10 +29,11 @@ class TruAnonService
       Rails.logger.info('verify_url from verify ' + @verify_url)
     else
       Rails.logger.info('Member is found...')
-      truanon_profile = profile_data['dataConfigurations'].find { |config| config['dataPointName'] == 'TruAnon Profile' }
+      truanon_profile = profile_data['dataConfigurations']&.find { |config| config['dataPointName'] == 'TruAnon Profile' }
       @public_profile_url = truanon_profile['displayValue'] if truanon_profile
-
     end
+  rescue StandardError => e
+    Rails.logger.error("TruAnonService error: #{e.message}")
   end
 
   def get_verify_url
@@ -51,5 +56,8 @@ class TruAnonService
 
     response = http.request(request)
     JSON.parse(response.body)
+  rescue StandardError => e
+    Rails.logger.error("TruAnonService HTTP request error: #{e.message}")
+    {}
   end
 end
