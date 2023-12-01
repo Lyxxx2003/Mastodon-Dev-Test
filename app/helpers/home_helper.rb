@@ -8,6 +8,7 @@ module HomeHelper
   end
 
   def account_link_to(account, additional_content = '', truanon_data: nil, path: nil)
+    Rails.logger.debug("Render additional_content data Call stack: #{caller.join("\n")}")
     content_tag(:div, class: 'account account--minimal') do
       content_tag(:div, class: 'account__wrapper') do
         section = if account.nil?
@@ -40,7 +41,7 @@ module HomeHelper
     truanon_data = @profile_data['dataConfigurations'].map do |config|
       {
         link: config['displayValue'],
-        icon: config['dataPointIconClass'],
+        display_name: config['dataPointName'],
         # Add other properties as needed
       }
     end
@@ -48,6 +49,11 @@ module HomeHelper
     Rails.logger.debug("Generated dataConfigurations data: #{truanon_data.inspect}") if Rails.env.development? || Rails.env.staging?
 
     truanon_data
+  end
+
+  def isValidURL(str)
+    regex = /\A[^\s.]+(\.[^\s]+)+\z/
+    !!(str =~ regex)
   end
 
   def render_truanon_data(truanon_data)
@@ -60,16 +66,20 @@ module HomeHelper
         Rails.logger.debug("Rendering TruAnon data for #{data.inspect}")
 
         begin
-          icon = h(data[:icon]).html_safe
           link = h(data[:link]).html_safe
+          display_name = h(data[:display_name]).html_safe
 
-          content_tag(:dt, class: 'translate') { 'TruAnon Profile' } +
+          content_tag(:dt, class: 'translate') { raw(display_name) } +
           content_tag(:dd, class: 'translate') do
             content_tag(:span) do
               content_tag(:i, '', class: 'fa fa-check-circle') +
               content_tag(:span) do
-                Rails.logger.debug("Link data: #{data.inspect}")
-                link_to('Click me', '/example_path', target: '_blank', rel: 'nofollow noopener noreferrer', translate: 'no')
+                Rails.logger.debug("Link data: #{link}")
+                if isValidURL(link)
+                  link_to(raw(link), 'https://' + link, target: '_blank', rel: 'nofollow noopener noreferrer', translate: 'no')
+                else
+                  raw(link)
+                end
               end
             end
           end

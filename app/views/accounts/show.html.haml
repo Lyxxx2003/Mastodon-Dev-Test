@@ -14,15 +14,16 @@
   = opengraph 'og:type', 'profile'
   = render 'og', account: @account, url: short_account_url(@account, only_path: false)
 
-- Rails.logger.debug("Generating TruAnon data...")
-- truanon_data = generate_truanon_data
-- Rails.logger.debug("TruAnon data generated: #{truanon_data.inspect}")
+-# - Rails.logger.debug("Generating TruAnon data...")
+-# - truanon_data = generate_truanon_data
+-# - Rails.logger.debug("TruAnon data generated: #{truanon_data.inspect}")
 
-- Rails.logger.debug("Rendering TruAnon data...")
-= render_truanon_data(truanon_data)
-- Rails.logger.debug("TruAnon data rendered.")
+-# - Rails.logger.debug("Rendering TruAnon data...")
+-# = render_truanon_data(truanon_data)
+-# - Rails.logger.debug("TruAnon data rendered.")
 
-- Rails.logger.debug("@profile_data: #{@profile_data.inspect}")
+-# - Rails.logger.debug("@profile_data: #{@profile_data.inspect}")
+-# - Rails.logger.debug("Call stack: #{caller.join("\n")}")
 
 = render partial: 'shared/web_app'
 
