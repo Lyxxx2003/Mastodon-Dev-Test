@@ -28,7 +28,7 @@
             %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Securely Assign Ownership' }
             %button{ type: :button, 'data-url': @verify_url, class: 'btn btn-primary verify-btn' }= 'Verify'
           - else
-            %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Your Identity Securely Assigned This Account' }
+            %input{ type: :text, maxlength: '999', spellcheck: 'false', readonly: 'true', value: 'Your Account Identity Is Securely Assigned' }
             %button{ type: :button, onclick: "window.open('https://#{@public_profile_url}', '_blank')", class: 'btn btn-primary' }= @public_profile_url
 
         = ff.input :wants_verified_identity, wrapper: :with_label, hint: t('verification.verified_identity_is_the_single_most_powerful_thing_you_can_do_to_amplify_your_profile')
