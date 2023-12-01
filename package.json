@@ -6,8 +6,7 @@
     "node": ">=18"
   },
   "workspaces": [
-    ".",
-    "streaming"
+    "."
   ],
   "scripts": {
     "build:development": "cross-env RAILS_ENV=development NODE_ENV=development ./bin/webpack",
@@ -28,7 +27,7 @@
     "lint": "yarn lint:js && yarn lint:json && yarn lint:sass && yarn lint:yml",
     "postversion": "git push --tags",
     "prepare": "husky install",
-    "start": "node ./streaming/index.js",
+    "start": "node ./index.js",
     "test": "yarn lint && yarn run typecheck && yarn jest",
     "typecheck": "tsc --noEmit"
   },

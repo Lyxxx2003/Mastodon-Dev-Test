@@ -19,7 +19,7 @@ class UserSettings
   setting :display_your_public_identity_profile, default: false
   setting :display_personal_information, default: false
   setting :display_verified_contact_information, default: false
-  setting :display_public_social_properties, default: false
+  setting :display_social_properties, default: false
   setting :default_language, default: nil
   setting :default_sensitive, default: false
   setting :default_privacy, default: nil, in: %w(public unlisted private)

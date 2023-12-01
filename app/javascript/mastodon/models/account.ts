@@ -16,15 +16,15 @@ import { CustomEmojiFactory } from './custom_emoji';
 import type { CustomEmoji } from './custom_emoji';
 
 // AccountField
-interface AccountFieldShape extends Required<ApiAccountFieldJSON> {
+export interface AccountFieldShape extends Required<ApiAccountFieldJSON> {
   name_emojified: string;
   value_emojified: string;
   value_plain: string | null;
 }
 
-type AccountField = RecordOf<AccountFieldShape>;
+export type AccountField = RecordOf<AccountFieldShape>;
 
-const AccountFieldFactory = ImmutableRecord<AccountFieldShape>({
+export const AccountFieldFactory = ImmutableRecord<AccountFieldShape>({
   name: '',
   value: '',
   verified_at: null,

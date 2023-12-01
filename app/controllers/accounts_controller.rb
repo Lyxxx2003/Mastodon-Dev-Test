@@ -34,23 +34,23 @@ class AccountsController < ApplicationController
           if @user_settings.display_your_public_identity_profile
             Rails.logger.info("display_your_public_identity_profile : #{profile_data}")
 
-            if @user_settings.display_public_social_properties
-              puts "display_public_social_properties."
+            if @user_settings.display_social_properties
+              puts "display_social_properties."
               social_configurations = filter_data_configurations(profile_data, '', 'social')
             else
-              puts "else display_public_social_properties."
+              puts "else display_social_properties."
               social_configurations = filter_data_configurations(profile_data, 'truanon', 'social')
               #truanon_only = filter_data_configurations(profile_data, 'truanon', 'social')
               #social_configurations = [truanon_only]
             end
           else
             puts "else display_your_public_identity_profile."
-            if @user_settings.display_public_social_properties
-              puts "display_public_social_properties."
+            if @user_settings.display_social_properties
+              puts "display_social_properties."
               social_configurations = filter_data_configurations(profile_data, '', 'social')
               social_configurations.reject! { |profile_data| profile_data['dataPointType'] == 'truanon' }
             else
-              puts "else display_public_social_properties."
+              puts "else display_social_properties."
             end
           end
 

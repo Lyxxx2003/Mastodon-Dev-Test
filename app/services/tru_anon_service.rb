@@ -2,11 +2,11 @@
 class TruAnonService
   def initialize(account)
     @account = account
-    @service_name = ENV['TRU_ANON_SERVICE_NAME']
-    @private_key = ENV['TRU_ANON_PRIVATE_KEY']
+    @service_name = ENV['TRUANON_SERVICE_NAME']
+    @private_key = ENV['TRUANON_PRIVATE_KEY']
 
     if @service_name.blank? || @private_key.blank?
-      raise StandardError, 'TRU_ANON_SERVICE_NAME and TRU_ANON_PRIVATE_KEY must be set'
+      raise StandardError, 'TRUANON_SERVICE_NAME and TRUANON_PRIVATE_KEY must be set'
     end
   end
 

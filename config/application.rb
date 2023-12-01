@@ -64,6 +64,8 @@ module Mastodon
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
+    config.i18n.default_locale = :en
+
     # TODO: Release a version which uses the 7.0 defaults as specified above,
     # but preserves the 6.1 cache format as set below. In a subsequent change,
     # remove this line setting to 6.1 cache format, and then release another version.

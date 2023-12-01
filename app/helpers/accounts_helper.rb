@@ -27,6 +27,11 @@ module AccountsHelper
     end
   end
 
+  def account_link_to_with_truanon(account, options = {})
+    truanon_data = generate_truanon_data
+    account_link_to(account, options.merge(truanon_data: truanon_data))
+  end
+
   def account_description(account)
     prepend_str = [
       [
