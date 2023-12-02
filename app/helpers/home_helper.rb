@@ -58,37 +58,38 @@ module HomeHelper
 
   def render_truanon_data(truanon_data)
     return '' unless truanon_data.present? && truanon_data.is_a?(Array)
+    content_tag(:div, id: 'truanon-data-container') do
+      content_tag(:dl, class: 'verified') do
+        truanon_data.map do |data|
+          next unless data.is_a?(Hash)
 
-    content_tag(:dl, class: 'verified') do
-      truanon_data.map do |data|
-        next unless data.is_a?(Hash)
+          Rails.logger.debug("Rendering TruAnon data for #{data.inspect}")
 
-        Rails.logger.debug("Rendering TruAnon data for #{data.inspect}")
+          begin
+            link = h(data[:link]).html_safe
+            display_name = h(data[:display_name]).html_safe
 
-        begin
-          link = h(data[:link]).html_safe
-          display_name = h(data[:display_name]).html_safe
-
-          content_tag(:dt, class: 'translate') { raw(display_name) } +
-          content_tag(:dd, class: 'translate') do
-            content_tag(:span) do
-              content_tag(:i, '', class: 'fa fa-check-circle') +
+            content_tag(:dt, class: 'translate') { raw(display_name) } +
+            content_tag(:dd, class: 'translate') do
               content_tag(:span) do
-                Rails.logger.debug("Link data: #{link}")
-                if isValidURL(link)
-                  link_to(raw(link), 'https://' + link, target: '_blank', rel: 'nofollow noopener noreferrer', translate: 'no')
-                else
-                  raw(link)
+                content_tag(:i, '', class: 'fa fa-check-circle') +
+                content_tag(:span) do
+                  Rails.logger.debug("Link data: #{link}")
+                  if isValidURL(link)
+                    link_to(raw(link), 'https://' + link, target: '_blank', rel: 'nofollow noopener noreferrer', translate: 'no')
+                  else
+                    raw(link)
+                  end
                 end
               end
             end
+          rescue => e
+            Rails.logger.error("Error rendering TruAnon data: #{e.message}")
+            Rails.logger.error("Data causing the error: #{data.inspect}")
+            ''
           end
-        rescue => e
-          Rails.logger.error("Error rendering TruAnon data: #{e.message}")
-          Rails.logger.error("Data causing the error: #{data.inspect}")
-          ''
-        end
-      end.join.html_safe
+        end.join.html_safe
+      end
     end
   end
   

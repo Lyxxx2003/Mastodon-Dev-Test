@@ -1,4 +1,4 @@
-- Rails.logger.debug("batch-table__row data...")
+- Rails.logger.debug("admin_account haml...")
 .batch-table__row{ class: [!account.suspended? && account.user_pending? && 'batch-table__row--attention', (account.suspended? || account.user_unconfirmed?) && 'batch-table__row--muted'] }
   %label.batch-table__row__select.batch-table__row__select--aligned.batch-checkbox
     = f.check_box :account_ids, { multiple: true, include_hidden: false }, account.id
