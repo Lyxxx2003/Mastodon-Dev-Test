@@ -39,7 +39,7 @@
         %label
         = f.simple_fields_for :settings, current_user.settings do |ff|
           .fields-group
-            = ff.input :display_your_public_identity_profile, wrapper: :with_label, hint: t('verification.privacy_is_your_choice_knowing_your_rank_and_score_make_you_visibly_trusted')
+            = ff.input :display_your_public_identity_profile, wrapper: :with_label, hint: t('verification.privacy_is_your_choice;_knowing_your_rank_and_score_makes_you_visibly_trusted')
             = ff.input :display_social_properties, wrapper: :with_label, hint: t('verification.showcase_public_links_and_properties_you_want_others_to_see_and_share')
           .fields-group
             = ff.input :display_verified_contact_information, wrapper: :with_label

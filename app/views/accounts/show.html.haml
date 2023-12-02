@@ -30,6 +30,23 @@
 :javascript
   console.log('javascript!!');
 
+  // Function to check if an element is present
+  function isElementPresent(elementId) {
+    return document.getElementById(elementId) !== null;
+  }
+
+  // Function to move the inner contents of truanon-data-container inside account__header__fields
+  function moveTruanonDataContainer() {
+    const truanonDataContainer = document.getElementById('truanon-data-container');
+    const accountHeaderFields = document.querySelector('.account__header__fields');
+
+    if (truanonDataContainer && accountHeaderFields) {
+      // Move each child of truanonDataContainer to accountHeaderFields
+      while (truanonDataContainer.firstChild) {
+        accountHeaderFields.appendChild(truanonDataContainer.firstChild);
+      }
+    }
+  }
   window.onload = async function() {
     console.log('Window onload!!');
     function isValidURL(str) {
@@ -45,7 +62,7 @@
       } else {
         setTimeout(function() {
           waitForElement(selector, callback);
-        }, 100); // Check again after 100 milliseconds
+        }, 1500); // Check again after 100 milliseconds
       }
     }
 
@@ -128,6 +145,7 @@
       console.log('profileData.dataConfigurations:', profileData.dataConfigurations); // Log the HTML content after appending
 
       generateListings(profileData.dataConfigurations, bioElement);
+      moveTruanonDataContainer()
 
       console.log('After appending badge:', bioElement.innerHTML); // Log the HTML content after appending
     });
