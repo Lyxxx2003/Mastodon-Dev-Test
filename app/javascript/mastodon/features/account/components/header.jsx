@@ -382,7 +382,9 @@ class Header extends ImmutablePureComponent {
     const isLocal         = account.get('acct').indexOf('@') === -1;
     const acct            = isLocal && domain ? `${account.get('acct')}@${domain}` : account.get('acct');
     const isIndexable     = !account.get('noindex');
+    const data_string     = { __html: truanon_profile_text };
 
+    console.log("data_string is ", data_string);
     const badges = [];
 
     if (account.get('bot')) {
@@ -454,6 +456,7 @@ class Header extends ImmutablePureComponent {
                     <dd>{intl.formatDate(account.get('created_at'), { year: 'numeric', month: 'short', day: '2-digit' })}</dd>
                   </dl>
 
+                  <div dangerouslySetInnerHTML={data_string} />
                   {fields.map((pair, i) => (
                     <dl key={i} className={classNames({ verified: pair.get('verified_at') })}>
                       <dt dangerouslySetInnerHTML={{ __html: pair.get('name_emojified') }} title={pair.get('name')} className='translate' />

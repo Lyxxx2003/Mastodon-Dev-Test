@@ -24,8 +24,8 @@ module HomeHelper
                             content_tag(:strong, display_name(account, custom_emojify: true), class: 'display-name__html emojify')
                           end +
                             content_tag(:span, "@#{account.acct}", class: 'display-name__account')
-                        end +
-                        render_truanon_data(truanon_data) # Render TruAnon data
+                        end 
+                        #render_truanon_data(truanon_data) # Render TruAnon data
                     end
                   end
 
@@ -39,17 +39,32 @@ module HomeHelper
     return unless @profile_data['dataConfigurations']
 
     # insert link: authorRankScore and display_name: authorRank from @profile_data and the append dataConfigurations  
-    truanon_data = [
-      {
-        link: @profile_data['authorRank'] + ' ' + @profile_data['authorRankScore'] + ' of 5',
-        display_name: 'Verified Identity',
-      }
-    ]
+    truanon_data = if @profile_data['type'] == 'error'
+      [
+        {
+          link: 'Ask this member to turn on verified identity',
+          display_name: 'Unknown Identity',
+          class_name: '',
+          class_icon: '',
+        }
+      ]
+    else
+      [
+        {
+          link: @profile_data['authorRank'] + ' ' + @profile_data['authorRankScore'] + ' of 5',
+          display_name: 'Verified Identity',
+          class_name: 'verified',
+          class_icon: 'fa fa-check-circle',
+        }
+      ]
+    end
 
     truanon_data += @profile_data['dataConfigurations'].map do |config|
       {
         link: config['displayValue'],
         display_name: config['dataPointName'],
+        class_name: 'verified',
+        class_icon: 'fa fa-check-circle',
       }
     end
 
@@ -65,39 +80,40 @@ module HomeHelper
 
   def render_truanon_data(truanon_data)
     return '' unless truanon_data.present? && truanon_data.is_a?(Array)
-    content_tag(:div, id: 'truanon-data-container') do
-      truanon_data.map do |data|
-        next unless data.is_a?(Hash)
+    truanon_data.map do |data|
+      next unless data.is_a?(Hash)
 
-        Rails.logger.debug("Rendering TruAnon data for #{data.inspect}")
+      Rails.logger.debug("Rendering TruAnon data for #{data.inspect}")
 
-        begin
-          link = h(data[:link]).html_safe
-          display_name = h(data[:display_name]).html_safe
+      begin
+        link = h(data[:link]).html_safe
+        display_name = h(data[:display_name]).html_safe
+        Rails.logger.debug("Rendering TruAnon display_name #{display_name}")
+        class_name = h(data[:class_name]).html_safe
+        class_icon = h(data[:class_icon]).html_safe
 
-          content_tag(:dl, class: 'verified') do
-            content_tag(:dt, class: 'translate') { raw(display_name) } +
-            content_tag(:dd, class: 'translate') do
-              content_tag(:span) do
-                content_tag(:i, '', class: 'fa fa-check-circle')
-              end +
-              content_tag(:span) do
-                Rails.logger.debug("Link data: #{link}")
-                if isValidURL(link)
-                  link_to(raw(link), 'https://' + link, target: '_blank', rel: 'nofollow noopener noreferrer', translate: 'no')
-                else
-                  raw(link)
-                end
+        content_tag(:dl, class: raw(class_name)) do
+          content_tag(:dt, class: 'translate') { raw(display_name) } +
+          content_tag(:dd, class: 'translate') do
+            content_tag(:span) do
+              content_tag(:i, '', class: raw(class_icon))
+            end +
+            content_tag(:span) do
+              Rails.logger.debug("Link data: #{link}")
+              if isValidURL(link)
+                link_to(raw(link), 'https://' + link, target: '_blank', rel: 'nofollow noopener noreferrer', translate: 'no')
+              else
+                raw(link)
               end
             end
           end
-        rescue => e
-          Rails.logger.error("Error rendering TruAnon data: #{e.message}")
-          Rails.logger.error("Data causing the error: #{data.inspect}")
-          ''
         end
-      end.join.html_safe
-    end
+      rescue => e
+        Rails.logger.error("Error rendering TruAnon data: #{e.message}")
+        Rails.logger.error("Data causing the error: #{data.inspect}")
+        ''
+      end
+    end.join.html_safe
   end
   
   def obscured_counter(count)

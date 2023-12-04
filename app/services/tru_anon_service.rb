@@ -13,7 +13,9 @@ class TruAnonService
   def get_profile
     Rails.logger.info('get_profile ' + @account.username)
     profile_url = "https://truanon.com/api/get_profile?id=#{@account.username}&service=#{@service_name}"
-    perform_request(profile_url)
+    profile_data = perform_request(profile_url)
+
+    process_profile_data(profile_data)
   end
 
   def verify_user
@@ -45,6 +47,40 @@ class TruAnonService
   end
 
   private
+
+  def process_profile_data(profile_data)
+
+    user_settings = @account.user.settings
+    social_configurations = filter_data_configurations(profile_data, user_settings.display_social_properties ? '' : 'truanon', 'social')
+    primary_configurations = filter_data_configurations(profile_data, '', 'primary')
+    additional_configurations = filter_data_configurations(profile_data, '', 'additional')
+    personal_configurations = filter_data_configurations(profile_data, '', 'personal')
+
+    configure_display_settings(social_configurations, primary_configurations, additional_configurations, personal_configurations)
+
+    new_configurations = social_configurations + personal_configurations + primary_configurations + additional_configurations
+    profile_data['dataConfigurations'] = new_configurations
+
+    Rails.logger.info("After processing: #{profile_data}")
+
+    profile_data
+  end
+
+  def configure_display_settings(social_configurations, primary_configurations, additional_configurations, personal_configurations)
+    # Implement display settings configuration logic here if needed
+  end
+
+  def filter_data_configurations(my_data, data_point_type, data_point_kind)
+    return [] unless my_data && my_data['dataConfigurations']
+
+    my_data['dataConfigurations'].select do |config|
+      if !data_point_type.empty?
+        config['dataPointType'] == data_point_type && config['dataPointKind'] == data_point_kind
+      else
+        config['dataPointKind'] == data_point_kind
+      end
+    end
+  end
 
   def perform_request(url)
     uri = URI.parse(url)
