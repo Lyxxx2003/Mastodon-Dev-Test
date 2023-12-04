@@ -11,10 +11,12 @@
   = render_initial_state
   = javascript_pack_tag 'application', crossorigin: 'anonymous'
 
-  - Rails.logger.debug("Generating TruAnon data...")
-  - truanon_data = generate_truanon_data
-  - @truanon_render = render_truanon_data(truanon_data)
-  - Rails.logger.debug("TruAnon truanon_render generated: #{@truanon_render.inspect}")
+  - if @account.present?
+    - Rails.logger.debug("TruAnon generate_truanon_data for account: #{@account}")
+    - @truanon_data = generate_truanon_data
+    - Rails.logger.debug("TruAnon generate_truanon_data generated: #{@truanon_data.inspect}")
+    - @truanon_render = render_truanon_data(@truanon_data)
+    - Rails.logger.debug("TruAnon truanon_render generated: #{@truanon_render.inspect}")
 
 .notranslate.app-holder#mastodon{ data: { props: Oj.dump(default_props) } }
   %noscript
@@ -25,3 +27,4 @@
 :javascript
   console.log('javascript!!');
   var truanon_profile_text = '#{@truanon_render}';
+  var truanon_profile_json = '#{@truanon_data.to_json}';

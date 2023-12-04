@@ -36,7 +36,7 @@ module HomeHelper
 
   # Create a helper method to generate TruAnon data
   def generate_truanon_data
-    return unless @profile_data['dataConfigurations']
+    return unless @profile_data
 
     # insert link: authorRankScore and display_name: authorRank from @profile_data and the append dataConfigurations  
     truanon_data = if @profile_data['type'] == 'error'
