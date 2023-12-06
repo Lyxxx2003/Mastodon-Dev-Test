@@ -386,7 +386,6 @@ class Header extends ImmutablePureComponent {
     const data_json     = { __html: truanon_profile_json };
 
     console.log("data_string is ", data_string);
-    console.log("data_json is ", data_json);
     const badges = [];
 
     if (account.get('bot')) {
@@ -458,7 +457,7 @@ class Header extends ImmutablePureComponent {
                     <dd>{intl.formatDate(account.get('created_at'), { year: 'numeric', month: 'short', day: '2-digit' })}</dd>
                   </dl>
 
-                  <span dangerouslySetInnerHTML={data_string} />
+                  <span id="ta_verified_links" dangerouslySetInnerHTML={data_string} />
 
                   {fields.map((pair, i) => (
                     <dl key={i} className={classNames({ verified: pair.get('verified_at') })}>

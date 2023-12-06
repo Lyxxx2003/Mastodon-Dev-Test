@@ -17,7 +17,7 @@ class UserSettings
   setting :omit_location, default: false
   setting :omit_pronouns, default: false
   setting :display_your_public_identity_profile, default: false
-  setting :display_personal_information, default: false
+  setting :display_profile_information, default: false
   setting :display_verified_contact_information, default: false
   setting :display_social_properties, default: false
   setting :default_language, default: nil

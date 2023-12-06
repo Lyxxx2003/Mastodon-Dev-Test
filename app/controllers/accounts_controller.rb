@@ -64,8 +64,8 @@ class AccountsController < ApplicationController
             additional_configurations = []
           end
 
-          if @user_settings.display_personal_information
-            puts "display_personal_information."
+          if @user_settings.display_profile_information
+            puts "display_profile_information."
             personal_configurations = filter_data_configurations(profile_data, '', 'personal')
             personal_configurations.reject! { |personal_configurations| personal_configurations['dataPointType'] == 'bio' }
 
@@ -82,7 +82,7 @@ class AccountsController < ApplicationController
             end
 
           else
-            puts "else display_personal_information."
+            puts "else display_profile_information."
             personal_configurations = []
           end
 

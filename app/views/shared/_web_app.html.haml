@@ -12,7 +12,7 @@
   = javascript_pack_tag 'application', crossorigin: 'anonymous'
 
   - if @account.present?
-    - Rails.logger.debug("TruAnon generate_truanon_data for account: #{@account}")
+    - Rails.logger.debug("TruAnon generate_truanon_data for account: #{@account.username}")
     - @truanon_data = generate_truanon_data
     - Rails.logger.debug("TruAnon generate_truanon_data generated: #{@truanon_data.inspect}")
     - @truanon_render = render_truanon_data(@truanon_data)
@@ -25,6 +25,14 @@
     %div
       = t('errors.noscript_html', apps_path: 'https://joinmastodon.org/apps')
 :javascript
-  console.log('javascript!!');
+  console.log('web app javascript!!');
   var truanon_profile_text = '#{@truanon_render}';
   var truanon_profile_json = '#{@truanon_data.to_json}';
+  function replaceContentWhenAvailable() {
+    const divElement = document.getElementById("ta_verified_links");
+    if (divElement) {
+      divElement.outerHTML = divElement.innerHTML;
+      clearInterval(intervalId);
+    }
+  }
+  const intervalId = setInterval(replaceContentWhenAvailable, 100);
