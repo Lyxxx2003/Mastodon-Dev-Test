@@ -1,33 +1,34 @@
 - Rails.logger.debug("web_app haml...")
+
 - content_for :header_tags do
   - if user_signed_in?
     = preload_pack_asset 'features/compose.js'
     = preload_pack_asset 'features/home_timeline.js'
     = preload_pack_asset 'features/notifications.js'
     %meta{ name: 'initialPath', content: request.path }
-
-  %meta{ name: 'applicationServerKey', content: Rails.configuration.x.vapid_public_key }
+    %meta{ name: 'applicationServerKey', content: Rails.configuration.x.vapid_public_key }
 
   = render_initial_state
   = javascript_pack_tag 'application', crossorigin: 'anonymous'
 
   - if @account.present?
-    - Rails.logger.debug("TruAnon generate_truanon_data for account: #{@account.username}")
-    - @truanon_data = generate_truanon_data
-    - Rails.logger.debug("TruAnon generate_truanon_data generated: #{@truanon_data.inspect}")
-    - @truanon_render = render_truanon_data(@truanon_data)
-    - Rails.logger.debug("TruAnon truanon_render generated: #{@truanon_render.inspect}")
+    - TruAnonService.new(@account).get_profile
+    - @account.truanon_data = generate_truanon_data
+    - Rails.logger.debug("TruAnon data attached to account: #{@account.truanon_data.inspect}")
+    - Rails.logger.debug("TruAnon data type: #{@account.truanon_data.class}")
+    - @truanon_render = render_truanon_data(@account.truanon_data)
+
+    - Rails.logger.debug("TruAnon truanon_render: #{@truanon_render.inspect}")
 
 .notranslate.app-holder#mastodon{ data: { props: Oj.dump(default_props) } }
-  %noscript
-    = image_pack_tag 'logo.svg', alt: 'Mastodon'
-
-    %div
-      = t('errors.noscript_html', apps_path: 'https://joinmastodon.org/apps')
+%noscript
+  = image_pack_tag 'logo.svg', alt: 'Mastodon'
+  %div
+    = t('errors.noscript_html', apps_path: 'https://joinmastodon.org/apps')
 :javascript
   console.log('web app javascript!!');
   var truanon_profile_text = '#{@truanon_render}';
-  var truanon_profile_json = '#{@truanon_data.to_json}';
+  var truanon_profile_json = '#{@account.truanon_data.to_json}';
   function replaceContentWhenAvailable() {
     const divElement = document.getElementById("ta_verified_links");
     if (divElement) {
