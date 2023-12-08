@@ -382,7 +382,10 @@ class Header extends ImmutablePureComponent {
     const isLocal         = account.get('acct').indexOf('@') === -1;
     const acct            = isLocal && domain ? `${account.get('acct')}@${domain}` : account.get('acct');
     const isIndexable     = !account.get('noindex');
+    const data_string     = { __html: truanon_profile_text };
+    const data_json     = { __html: truanon_profile_json };
 
+    console.log("data_string is ", data_string);
     const badges = [];
 
     if (account.get('bot')) {
@@ -453,6 +456,8 @@ class Header extends ImmutablePureComponent {
                     <dt><FormattedMessage id='account.joined_short' defaultMessage='Joined' /></dt>
                     <dd>{intl.formatDate(account.get('created_at'), { year: 'numeric', month: 'short', day: '2-digit' })}</dd>
                   </dl>
+
+                  <span id="ta_verified_links" dangerouslySetInnerHTML={data_string} />
 
                   {fields.map((pair, i) => (
                     <dl key={i} className={classNames({ verified: pair.get('verified_at') })}>

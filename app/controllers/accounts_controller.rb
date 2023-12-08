@@ -13,17 +13,116 @@ class AccountsController < ApplicationController
 
   skip_around_action :set_locale, if: -> { [:json, :rss].include?(request.format&.to_sym) }
   skip_before_action :require_functional!, unless: :limited_federation_mode?
+  
+  @verify_url = ""
 
   def show
     respond_to do |format|
       format.html do
+        @account = Account.find_by(username: params[:username])
+        @user = @account.user
+        @user_settings = @user.settings if @user.present?
+
+        if @user_settings.wants_verified_identity
+          # Do something when wants_verified_identity is true
+          puts "Display public identity profile is enabled!"
+          tru_anon_service = TruAnonService.new(@account)
+          profile_data = tru_anon_service.get_profile
+
+          # Use the filter function
+          social_configurations = []
+          if @user_settings.display_your_public_identity_profile
+            Rails.logger.info("display_your_public_identity_profile : #{profile_data}")
+
+            if @user_settings.display_social_properties
+              puts "display_social_properties."
+              social_configurations = filter_data_configurations(profile_data, '', 'social')
+            else
+              puts "else display_social_properties."
+              social_configurations = filter_data_configurations(profile_data, 'truanon', 'social')
+              #truanon_only = filter_data_configurations(profile_data, 'truanon', 'social')
+              #social_configurations = [truanon_only]
+            end
+          else
+            puts "else display_your_public_identity_profile."
+            if @user_settings.display_social_properties
+              puts "display_social_properties."
+              social_configurations = filter_data_configurations(profile_data, '', 'social')
+              social_configurations.reject! { |profile_data| profile_data['dataPointType'] == 'truanon' }
+            else
+              puts "else display_social_properties."
+            end
+          end
+
+          if @user_settings.display_verified_contact_information
+            puts "display_verified_contact_information."
+            primary_configurations = filter_data_configurations(profile_data, '', 'primary')
+            additional_configurations = filter_data_configurations(profile_data, '', 'additional')
+          else
+            puts "else display_verified_contact_information."
+            primary_configurations = []
+            additional_configurations = []
+          end
+
+          if @user_settings.display_profile_information
+            puts "display_profile_information."
+            personal_configurations = filter_data_configurations(profile_data, '', 'personal')
+            personal_configurations.reject! { |personal_configurations| personal_configurations['dataPointType'] == 'bio' }
+
+            if @user_settings.omit_age
+              personal_configurations.reject! { |personal_configurations| personal_configurations['dataPointType'] == 'birthday' }
+            end
+
+            if @user_settings.omit_location
+              personal_configurations.reject! { |personal_configurations| personal_configurations['dataPointType'] == 'location' }
+            end
+
+            if @user_settings.omit_pronouns
+              personal_configurations.reject! { |profile_data| profile_data['dataPointType'] == 'gender' }
+            end
+
+          else
+            puts "else display_profile_information."
+            personal_configurations = []
+          end
+
+          personal_configurations.reject! { |profile_data| profile_data['dataPointType'] == 'bio' }
+          new_configurations = social_configurations + personal_configurations + primary_configurations + additional_configurations
+          # Replace the dataConfigurations array in profile_data
+          profile_data['dataConfigurations'] = new_configurations
+          #puts new_configurations
+          Rails.logger.info('profile_data: ' + profile_data.to_s)
+          @profile_data = profile_data
+
+          
+        else
+          new_configurations = []
+
+          @profile_data = { 'dataConfigurations' => new_configurations }
+
+          puts "Display public identity profile is disabled or not set."
+        end
+
+
         expires_in(15.seconds, public: true, stale_while_revalidate: 30.seconds, stale_if_error: 1.hour) unless user_signed_in?
+      end
+
+      def filter_data_configurations(my_data, data_point_type, data_point_kind)
+        return [] unless my_data && my_data['dataConfigurations']
+
+        my_data['dataConfigurations'].select do |profile_data|
+          if !data_point_type.empty?
+            profile_data['dataPointType'] == data_point_type && profile_data['dataPointKind'] == data_point_kind
+          else
+            profile_data['dataPointKind'] == data_point_kind
+          end
+        end
       end
 
       format.rss do
         expires_in 1.minute, public: true
 
-        limit     = params[:limit].present? ? [params[:limit].to_i, PAGE_SIZE_MAX].min : PAGE_SIZE
+        limit = params[:limit].present? ? [params[:limit].to_i, PAGE_SIZE_MAX].min : PAGE_SIZE
         @statuses = filtered_statuses.without_reblogs.limit(limit)
         @statuses = cache_collection(@statuses, Status)
       end
