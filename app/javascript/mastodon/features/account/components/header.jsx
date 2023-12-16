@@ -228,15 +228,35 @@ class Header extends ImmutablePureComponent {
     }
   }
 
+  state = {
+    truanonData: null,  // Add a state for TruAnon data
+  };
+
   componentDidMount () {
     this._attachLinkEvents();
+    this.fetchTruAnonData();  // Fetch TruAnon data
   }
 
   componentDidUpdate () {
     this._attachLinkEvents();
   }
 
+  fetchTruAnonData = () => {
+    // Replace '/api/truanon_profile/id' with your actual API endpoint
+    fetch(`/api/truanon_profile/${this.props.account.get('id')}`)
+      .then(response => response.text())
+      .then(data => this.setState({ truanonData: data }))
+      .catch(error => console.error('Error fetching TruAnon data', error));
+  };
+
   render () {
+    console.log("bender render()");
+
+    const { truanonData } = this.state;
+
+    const truanonHTML = { __html: truanonData };
+    console.log("bendertruanonHTML ", truanonHTML);
+
     const { account, hidden, intl, domain } = this.props;
     const { signedIn, permissions } = this.context.identity;
 
@@ -382,10 +402,7 @@ class Header extends ImmutablePureComponent {
     const isLocal         = account.get('acct').indexOf('@') === -1;
     const acct            = isLocal && domain ? `${account.get('acct')}@${domain}` : account.get('acct');
     const isIndexable     = !account.get('noindex');
-    const data_string     = { __html: truanon_profile_text };
-    const data_json     = { __html: truanon_profile_json };
 
-    console.log("data_string is ", data_string);
     const badges = [];
 
     if (account.get('bot')) {
@@ -457,7 +474,7 @@ class Header extends ImmutablePureComponent {
                     <dd>{intl.formatDate(account.get('created_at'), { year: 'numeric', month: 'short', day: '2-digit' })}</dd>
                   </dl>
 
-                  <span id="ta_verified_links" dangerouslySetInnerHTML={data_string} />
+                  <div dangerouslySetInnerHTML={{ __html: truanonData }} />
 
                   {fields.map((pair, i) => (
                     <dl key={i} className={classNames({ verified: pair.get('verified_at') })}>

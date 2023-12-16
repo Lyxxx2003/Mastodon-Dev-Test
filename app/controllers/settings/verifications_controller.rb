@@ -6,11 +6,11 @@ class Settings::VerificationsController < Settings::BaseController
   def show
     @verified_links = @account.fields.select(&:verified?)
 
-    tru_anon_service = TruAnonService.new(@account)
-    tru_anon_service.verify_user
+    truanon_service = TruAnonService.new(@account)
+    truanon_service.verify_user
 
-    @verify_url = tru_anon_service.get_verify_url
-    @public_profile_url = tru_anon_service.get_public_profile_url
+    @verify_url = truanon_service.get_verify_url
+    @public_profile_url = truanon_service.get_public_profile_url
 
   end
 
