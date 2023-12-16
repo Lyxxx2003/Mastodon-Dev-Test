@@ -5,9 +5,9 @@ class TruanonController < ApplicationController
     truanon_data = truanon_service.get_profile
     Rails.logger.debug("Truanon data received: #{truanon_data.inspect}")
 
-    html_content = truanon_service.render_truanon_data
-    Rails.logger.debug("Generated HTML content: #{html_content.inspect}")
-
-    render html: html_content.html_safe
+    # html_content = truanon_service.render_truanon_data
+    # Rails.logger.debug("Generated HTML content: #{html_content.inspect}")
+    # Assuming get_profile returns a JSON-compatible structure
+    render json: truanon_data
   end
 end

@@ -16,6 +16,8 @@ class TruAnonService
     profile_data = perform_request(profile_url)
 
     @profile_data = process_profile_data(profile_data)
+
+    generate_truanon_data
   end
 
   def verify_user
