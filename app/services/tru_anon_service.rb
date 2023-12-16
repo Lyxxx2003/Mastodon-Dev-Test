@@ -33,8 +33,6 @@ class TruAnonService
       Rails.logger.info('verify_url from verify ' + @verify_url)
     else
       Rails.logger.info('Member is found...')
-      truanon_profile = profile_data['dataConfigurations']&.find { |config| config['dataPointName'] == 'TruAnon Profile' }
-      @public_profile_url = truanon_profile['displayValue'] if truanon_profile
     end
   rescue StandardError => e
     Rails.logger.error("TruAnonService error: #{e.message}")
@@ -124,6 +122,8 @@ class TruAnonService
 
   def process_profile_data(profile_data)
     user_settings = @account.user.settings
+    truanon_profile = profile_data['dataConfigurations']&.find { |config| config['dataPointName'] == 'TruAnon Profile' }
+    @public_profile_url = truanon_profile['displayValue'] if truanon_profile
 
     if user_settings.wants_verified_identity
       social_configurations = user_settings.display_social_properties ? filter_data_configurations(profile_data, '', 'social') : []
