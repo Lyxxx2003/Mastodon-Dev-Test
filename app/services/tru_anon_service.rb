@@ -48,38 +48,36 @@ class TruAnonService
     @public_profile_url
   end
 
-  # Create a helper method to generate TruAnon data
   def generate_truanon_data
     user_settings = @account.user.settings
     return unless @profile_data
 
     truanon_data = if @profile_data['type'] == 'error' || !user_settings.wants_verified_identity
       # Logic for error or when verified identity is off
-      [
-        {
-          link: 'Ask this member to turn on verified identity',
-          display_name: 'Unknown Identity',
-          class_name: '',
-          class_icon: '',
-        }
-      ]
+      [{
+        link: 'Ask this member to turn on verified identity',
+        display_name: 'Unknown Identity',
+        class_name: '',
+        class_icon: '',
+      }]
     else
       # Logic for normal processing
-      [
-        {
-          link: @profile_data['authorRank'] + ' ' + @profile_data['authorRankScore'] + ' of 5',
-          display_name: 'Verified Identity',
-          class_name: 'verified',
-          class_icon: 'fa fa-check-circle',
-        }
-      ]
+      [{
+        link: @profile_data['authorRank'] + ' ' + @profile_data['authorRankScore'] + ' of 5',
+        display_name: 'Verified Identity',
+        class_name: 'verified',
+        class_icon: 'fa fa-check-circle',
+      }]
     end
 
     # Append additional data configurations if they exist
     if @profile_data['dataConfigurations']
       additional_data = @profile_data['dataConfigurations'].map do |config|
+        link_value = config['displayValue']
+        link = isValidURL(link_value) ? "<a href='https://#{link_value}' target='_blank' rel='noopener noreferrer'>#{link_value}</a>" : link_value
+
         {
-          link: config['displayValue'],
+          link: link,
           display_name: config['dataPointName'],
           class_name: 'verified',
           class_icon: 'fa fa-check-circle',

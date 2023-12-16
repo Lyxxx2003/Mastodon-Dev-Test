@@ -234,7 +234,6 @@ class Header extends ImmutablePureComponent {
 
   componentDidMount () {
     this._attachLinkEvents();
-    console.log("bender componentDidMount");
     this.fetchTruAnonData();  // Fetch TruAnon data
   }
 
@@ -243,8 +242,6 @@ class Header extends ImmutablePureComponent {
   }
 
   fetchTruAnonData = () => {
-    console.log("bender fetchTruAnonData");
-    // Replace '/api/truanon_profile/id' with your actual API endpoint
     fetch(`/api/truanon_profile/${this.props.account.get('id')}`)
       .then(response => response.text())
       .then(data => this.setState({ truanonData: data }))
@@ -252,8 +249,6 @@ class Header extends ImmutablePureComponent {
   };
 
   render () {
-    console.log("bender render()");
-
     const { truanonData } = this.state;
 
     console.log("bender truanonData (raw string): ", truanonData);
@@ -261,7 +256,6 @@ class Header extends ImmutablePureComponent {
     let parsedTruanonData;
     try {
       parsedTruanonData = JSON.parse(truanonData);
-      console.log("bender parsedTruanonData: ", parsedTruanonData);
     } catch (e) {
       console.error("Error parsing truanonData: ", e);
       parsedTruanonData = []; // default to an empty array in case of error
@@ -273,12 +267,13 @@ class Header extends ImmutablePureComponent {
             <dt>
               {item.display_name}
             </dt>
-            <dd>{item.class_icon && <i className={item.class_icon}></i>} {item.link}</dd>
+            <dd>
+              {item.class_icon && <i className={item.class_icon}></i>}
+              <span dangerouslySetInnerHTML={{ __html: item.link }} />
+            </dd>
           </dl>
         ))
       : null;
-
-    console.log("Generated truanonElements: ", truanonElements);
 
     const { account, hidden, intl, domain } = this.props;
     const { signedIn, permissions } = this.context.identity;
