@@ -145,7 +145,7 @@ class TruAnonService
         truanon_configurations = []
       end
 
-      if user_settings.display_profile_information
+      if user_settings.display_basic_profile_details
         personal_configurations = filter_data_configurations(profile_data, '', 'personal')
         personal_configurations.reject! { |data| data['dataPointType'] == 'bio' }
         personal_configurations.reject! { |data| user_settings.omit_age && data['dataPointType'] == 'birthday' }
