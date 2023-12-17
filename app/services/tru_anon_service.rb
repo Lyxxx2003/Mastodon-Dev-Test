@@ -21,7 +21,8 @@ class TruAnonService
   end
 
   def verify_user
-    profile_data = get_profile
+    get_profile
+    profile_data = @profile_data
     Rails.logger.info('verify_user ' + @account.username)
 
     if profile_data['type'] == 'error' && profile_data['title'] == 'Member Unknown'
