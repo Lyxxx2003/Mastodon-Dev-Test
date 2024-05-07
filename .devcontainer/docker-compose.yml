@@ -10,7 +10,7 @@ services:
       - ../:/app
       - ./post-create.sh:/app/.devcontainer/post-create.sh:ro
       - ../Procfile.dev:/Procfile.dev:ro
-
+    working_dir: /app
 
     environment:
       RAILS_ENV: development
@@ -29,9 +29,9 @@ services:
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
     ports:
-      - '127.0.0.1:3000:3000'
-      - '127.0.0.1:3035:3035'
-      - '127.0.0.1:4000:4000'
+      - '3000:3000'
+      - '3035:3035'
+      - '4000:4000'
     networks:
       - external_network
       - internal_network
