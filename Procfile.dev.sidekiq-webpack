@@ -1,0 +1,2 @@
+sidekiq: env PORT=3000 RAILS_ENV=development bundle exec sidekiq
+webpack: bin/webpack-dev-server
