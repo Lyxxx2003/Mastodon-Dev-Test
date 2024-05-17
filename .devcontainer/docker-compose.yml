@@ -10,6 +10,8 @@ services:
       - ../:/app
       - ./post-create.sh:/app/.devcontainer/post-create.sh:ro
       - ../Procfile.dev:/Procfile.dev:ro
+      - /etc/letsencrypt/live/trustyantler.truanon.com/fullchain.pem:/etc/ssl/certs/fullchain.pem
+      - /etc/letsencrypt/live/trustyantler.truanon.com/privkey.pem:/etc/ssl/private/privkey.pem
     working_dir: /app
 
     environment:
@@ -29,6 +31,8 @@ services:
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
     ports:
+      - "443:3001"  # This maps HTTPS traffic from the host's port 443 to the container's port 3000
+      - "3001:3001"  # Add this line to expose port 3001
       - '3000:3000'
       - '3035:3035'
       - '4000:4000'

@@ -12,6 +12,11 @@ else
   bind "tcp://#{ENV.fetch('BIND', '0.0.0.0')}:#{ENV.fetch('PORT', 3000)}"
 end
 
+ssl_bind '0.0.0.0', '3001', {
+  key: "/etc/ssl/private/privkey.pem",
+  cert: "/etc/ssl/certs/fullchain.pem"
+}
+
 environment ENV.fetch('RAILS_ENV') { 'development' }
 workers     ENV.fetch('WEB_CONCURRENCY') { 2 }.to_i
 
