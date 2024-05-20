@@ -10,6 +10,7 @@ class NotificationMailer < ApplicationMailer
   before_action :set_account, only: [:follow, :favourite, :reblog, :follow_request]
   after_action :set_list_headers!
 
+  default from: ENV['SMTP_FROM_ADDRESS']
   default to: -> { email_address_with_name(@user.email, @me.username) }
 
   def mention

@@ -120,10 +120,8 @@ Rails.application.configure do
 
   # If using a Heroku, Vagrant or generic remote development environment,
   # use letter_opener_web, accessible at  /letter_opener.
-  # Otherwise, use letter_opener, which launches a browser window to view sent mail.
-  # config.action_mailer.delivery_method = ENV.fetch('LOCAL_DELIVERY_METHOD', 'smtp').to_sym
-  
-  config.action_mailer.delivery_method = (ENV['HEROKU'] || ENV['VAGRANT'] || ENV['REMOTE_DEV']) ? :letter_opener_web : :letter_opener
+  # Otherwise, use letter_opener, which launches a browser window to view sent mail.  
+  config.action_mailer.delivery_method = :smtp
 
   # We provide a default secret for the development environment here.
   # This value should not be used in production environments!
