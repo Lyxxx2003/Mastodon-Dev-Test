@@ -49,7 +49,9 @@ Rails.application.configure do
   end
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  # config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
+  # config.action_mailer.delivery_method = :smtp
 
   config.action_mailer.perform_caching = false
 
@@ -80,11 +82,47 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
-  config.action_mailer.default_options = { from: 'notifications@localhost' }
+  outgoing_email_address = ENV.fetch('SMTP_FROM_ADDRESS', 'notifications@localhost')
+  outgoing_email_domain  = Mail::Address.new(outgoing_email_address).domain
+
+  config.action_mailer.default_options = {
+    from: outgoing_email_address,
+    message_id: -> { "<#{Mail.random_tag}@#{outgoing_email_domain}>" },
+  }
+
+  config.action_mailer.smtp_settings = {
+    port: ENV['SMTP_PORT'],
+    address: ENV['SMTP_SERVER'],
+    user_name: ENV['SMTP_USERNAME'].presence,
+    password: ENV['SMTP_PASSWORD'].presence,
+    domain: ENV['SMTP_DOMAIN'] || ENV['LOCAL_DOMAIN'],
+    authentication: :login,
+    # authentication: ENV['SMTP_AUTH_METHOD'] == 'none' ? nil : ENV['SMTP_AUTH_METHOD'] || :plain,
+    ca_file: ENV['SMTP_CA_FILE'].presence || '/etc/ssl/certs/ca-certificates.crt',
+    openssl_verify_mode: case ENV['SMTP_OPENSSL_VERIFY_MODE']&.downcase
+                        when 'none'
+                          OpenSSL::SSL::VERIFY_NONE
+                        when 'peer'
+                          OpenSSL::SSL::VERIFY_PEER
+                        when 'client_once'
+                          OpenSSL::SSL::VERIFY_CLIENT_ONCE
+                        when 'fail_if_no_peer_cert'
+                          OpenSSL::SSL::VERIFY_FAIL_IF_NO_PEER_CERT
+                        else
+                          OpenSSL::SSL::VERIFY_NONE
+                        end,
+    # enable_starttls: enable_starttls,
+    enable_starttls_auto: true,
+    # tls: ENV['SMTP_TLS'].presence && ENV['SMTP_TLS'] == 'true',
+    # ssl: ENV['SMTP_SSL'].presence && ENV['SMTP_SSL'] == 'true',
+    read_timeout: 20,
+  }
 
   # If using a Heroku, Vagrant or generic remote development environment,
   # use letter_opener_web, accessible at  /letter_opener.
   # Otherwise, use letter_opener, which launches a browser window to view sent mail.
+  # config.action_mailer.delivery_method = ENV.fetch('LOCAL_DELIVERY_METHOD', 'smtp').to_sym
+  
   config.action_mailer.delivery_method = (ENV['HEROKU'] || ENV['VAGRANT'] || ENV['REMOTE_DEV']) ? :letter_opener_web : :letter_opener
 
   # We provide a default secret for the development environment here.
@@ -93,6 +131,9 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
+
+  config.action_mailer.logger = Logger.new(STDOUT)
+
 end
 
 Redis.raise_deprecations = true
