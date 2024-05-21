@@ -15,6 +15,11 @@ class Auth::ConfirmationsController < Devise::ConfirmationsController
   skip_before_action :check_self_destruct!
   skip_before_action :require_functional!
 
+  # def test_email
+  #   TestMailer.test_email.deliver_now
+  #   redirect_to root_path, notice: 'Test email sent.'
+  # end
+
   def show
     old_session_values = session.to_hash
     reset_session
