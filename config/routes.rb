@@ -59,7 +59,7 @@ Rails.application.routes.draw do
   
   get '/verification', to: redirect('/settings/verification')
 
-  mount LetterOpenerWeb::Engine, at: 'letter_opener' if Rails.env.development?
+  # mount LetterOpenerWeb::Engine, at: 'letter_opener' if Rails.env.development?
 
   get 'health', to: 'health#show'
 

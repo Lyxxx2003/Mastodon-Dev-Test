@@ -37,10 +37,14 @@ Rails.application.configure do
 
   config.action_controller.forgery_protection_origin_check = ENV['DISABLE_FORGERY_REQUEST_PROTECTION'].nil?
 
-  ActiveSupport::Logger.new(STDOUT).tap do |logger|
-    logger.formatter = config.log_formatter
-    config.logger = ActiveSupport::TaggedLogging.new(logger)
-  end
+  # ActiveSupport::Logger.new(STDOUT).tap do |logger|
+  #   logger.formatter = config.log_formatter
+  #   config.logger = ActiveSupport::TaggedLogging.new(logger)
+  # end
+
+  # Ensure logging is set up correctly
+  config.log_level = :debug
+  config.logger = ActiveSupport::Logger.new("log/development.log")
 
   # Generate random VAPID keys
   Webpush.generate_key.tap do |vapid_key|
@@ -85,7 +89,7 @@ Rails.application.configure do
   # If using a Heroku, Vagrant or generic remote development environment,
   # use letter_opener_web, accessible at  /letter_opener.
   # Otherwise, use letter_opener, which launches a browser window to view sent mail.
-  config.action_mailer.delivery_method = (ENV['HEROKU'] || ENV['VAGRANT'] || ENV['REMOTE_DEV']) ? :letter_opener_web : :letter_opener
+  # config.action_mailer.delivery_method = (ENV['HEROKU'] || ENV['VAGRANT'] || ENV['REMOTE_DEV']) ? :letter_opener_web : :letter_opener
 
   # We provide a default secret for the development environment here.
   # This value should not be used in production environments!
@@ -93,6 +97,25 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Set the default from address
+  config.action_mailer.default_options = { from: 'noreply@trustyantler.truanon.com' }
+
+  # Configure the delivery method
+  config.action_mailer.delivery_method = :smtp
+
+  # Set SMTP settings 
+  config.action_mailer.smtp_settings = {
+    address: ENV['SMTP_SERVER'],
+    port: ENV['SMTP_PORT'],
+    user_name: ENV['SMTP_LOGIN'],
+    password: ENV['SMTP_PASSWORD'],
+    authentication: ENV.fetch('SMTP_AUTH_METHOD', 'plain').to_sym,
+    enable_starttls_auto: true,
+    domain: ENV['LOCAL_DOMAIN'],
+    openssl_verify_mode: ENV.fetch('SMTP_OPENSSL_VERIFY_MODE', 'none').to_sym
+  }
+
 end
 
 Redis.raise_deprecations = true

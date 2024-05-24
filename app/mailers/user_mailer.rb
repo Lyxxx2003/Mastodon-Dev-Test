@@ -204,4 +204,9 @@ class UserMailer < Devise::Mailer
   def locale
     @resource.locale.presence || I18n.default_locale
   end
+  class UserMailer < ApplicationMailer
+    def test_email(email)
+      mail(to: email, subject: 'Test Email', body: 'This is a test email.')
+    end
+  end
 end

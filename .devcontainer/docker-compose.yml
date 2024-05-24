@@ -28,9 +28,17 @@ services:
       ES_HOST: es
       ES_PORT: '9200'
       LIBRE_TRANSLATE_ENDPOINT: http://libretranslate:5000
+      SMTP_SERVER: smtp.socketlabs.com
+      SMTP_PORT: '587'
+      SMTP_LOGIN: server14241
+      SMTP_PASSWORD: q6W4Leo8QBm9d
+      SMTP_FROM_ADDRESS: noreply@trustyantler.truanon.com
+      SMTP_DELIVERY_METHOD: smtp
+
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
     ports:
+      - "80:3000" # for port 80
       - "443:3001"  # This maps HTTPS traffic from the host's port 443 to the container's port 3000
       - "3001:3001"  # Add this line to expose port 3001
       - '3000:3000'
