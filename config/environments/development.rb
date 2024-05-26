@@ -15,7 +15,7 @@ Rails.application.configure do
 
   # Show full error reports.
   config.consider_all_requests_local = true
-
+  # config.action_mailer.default_options
   # Enable server timing
   config.server_timing = true
 
@@ -53,7 +53,7 @@ Rails.application.configure do
   end
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.perform_caching = false
 
@@ -84,7 +84,7 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
-  config.action_mailer.default_options = { from: 'notifications@localhost' }
+  # config.action_mailer.default_options = { from: 'notifications@localhost' }
 
   # If using a Heroku, Vagrant or generic remote development environment,
   # use letter_opener_web, accessible at  /letter_opener.
@@ -104,16 +104,16 @@ Rails.application.configure do
   # Configure the delivery method
   config.action_mailer.delivery_method = :smtp
 
-  # Set SMTP settings 
+  # Set SMTP settings
   config.action_mailer.smtp_settings = {
     address: ENV['SMTP_SERVER'],
     port: ENV['SMTP_PORT'],
     user_name: ENV['SMTP_LOGIN'],
     password: ENV['SMTP_PASSWORD'],
-    authentication: ENV.fetch('SMTP_AUTH_METHOD', 'plain').to_sym,
+    authentication: ENV.fetch('SMTP_AUTH_METHOD', 'login').to_sym,
     enable_starttls_auto: true,
     domain: ENV['LOCAL_DOMAIN'],
-    openssl_verify_mode: ENV.fetch('SMTP_OPENSSL_VERIFY_MODE', 'none').to_sym
+    openssl_verify_mode: ENV.fetch('SMTP_OPENSSL_VERIFY_MODE', 'none')
   }
 
 end
