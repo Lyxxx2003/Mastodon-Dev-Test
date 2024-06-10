@@ -12,7 +12,7 @@ else
   bind "tcp://#{ENV.fetch('BIND', '0.0.0.0')}:#{ENV.fetch('PORT', 3000)}"
 end
 
-ssl_bind '0.0.0.0', '3001', {
+ssl_bind '0.0.0.0', '3003', {
   key: "/etc/ssl/private/privkey.pem",
   cert: "/etc/ssl/certs/fullchain.pem"
 }

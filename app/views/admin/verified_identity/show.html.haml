@@ -1,0 +1,20 @@
+%h1 Verified Identity Settings
+
+%p
+  %strong Service Name:
+  = @verified_identity_setting.service_name
+
+%p
+  %strong Private Key:
+  = @verified_identity_setting.private_key
+
+%p
+  %strong Enable Verified Identity:
+  = @verified_identity_setting.enable_verified_identity ? 'Yes' : 'No'
+
+%p
+  %strong Enable "Unknown" Badge State:
+  = @verified_identity_setting.enable_unknown_badge ? 'Yes' : 'No'
+
+= link_to 'Back to Verified Identities', admin_verified_identity_path, class: 'btn btn-secondary'
+

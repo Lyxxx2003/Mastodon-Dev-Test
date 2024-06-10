@@ -48,7 +48,7 @@ Rails.application.routes.draw do
   root 'home#index'
 
   # config/routes.rb for verified ID
-  get '/admin/verified_identity', to: 'admin/verified_identity#index'
+  # get '/admin/verified_identity', to: 'admin/verified_identity#index'
   get '/api/truanon_profile/:id', to: 'truanon#profile'
 
   # config/routes.rb

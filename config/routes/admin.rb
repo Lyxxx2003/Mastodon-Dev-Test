@@ -4,10 +4,17 @@ namespace :admin do
   get '/dashboard', to: 'dashboard#index'
 
   resources :dashboard do
-    member do
-      get :verified_identity
-    end
+    # member do
+    #   # get 'verified_identity', to: 'verified_identity#index'
+    #   # get 'verified_identity/show', to: 'verified_identity#show'
+
+    # end
   end
+
+  # for verified_identity
+  get 'verified_identity', to: 'verified_identity#index', as: :verified_identity
+  post 'verified_identity', to: 'verified_identity#create'
+  get 'verified_identity/show/:id', to: 'verified_identity#show', as: :verified_identity_show
 
   resources :domain_allows, only: [:new, :create, :destroy]
   resources :domain_blocks, only: [:new, :create, :destroy, :update, :edit] do

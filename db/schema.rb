@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_06_183200) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_05_020128) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -1111,6 +1111,15 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_06_183200) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, opclass: :text_pattern_ops, where: "(reset_password_token IS NOT NULL)"
     t.index ["role_id"], name: "index_users_on_role_id", where: "(role_id IS NOT NULL)"
     t.index ["unconfirmed_email"], name: "index_users_on_unconfirmed_email", where: "(unconfirmed_email IS NOT NULL)"
+  end
+
+  create_table "verified_identity_settings", force: :cascade do |t|
+    t.string "service_name"
+    t.string "private_key"
+    t.boolean "enable_verified_identity"
+    t.boolean "enable_unknown_badge"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "web_push_subscriptions", force: :cascade do |t|

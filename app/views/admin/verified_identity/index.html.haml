@@ -12,22 +12,21 @@
 
 - content_for :content do
   .admin-wrapper
-    .sidebar-wrapper
-      .sidebar-wrapper__inner
-        .sidebar
-          = link_to root_path do
-            = render_logo
+    .sidebar-wrapper__inner
+      .sidebar
+        = link_to root_path do
+          = render_logo
 
-          .sidebar__toggle
-            .sidebar__toggle__logo
-              = link_to root_path do
-                = logo_as_symbol(:wordmark)
+        .sidebar__toggle
+          .sidebar__toggle__logo
+            = link_to root_path do
+              = logo_as_symbol(:wordmark)
 
-            = link_to '#', class: 'sidebar__toggle__icon', 'aria-label': t('navigation.toggle_menu'), 'aria-expanded': 'false' do
-              = fa_icon 'bars'
-              = fa_icon 'times'
+          = link_to '#', class: 'sidebar__toggle__icon', 'aria-label': t('navigation.toggle_menu'), 'aria-expanded': 'false' do
+            = fa_icon 'bars'
+            = fa_icon 'times'
 
-          = render_navigation
+        = render_navigation
 
     .content-wrapper
       .content
@@ -50,45 +49,42 @@
             TruAnon offers a credible identity in just 10 minutes, globally. This continuous identity verification is stronger than a security gate; it means people cannot return if their accounts are turned off. Plus, being equally available means avoiding confirmation is just as clear as having it. The effect is immediate, like installing safety lights; regular people pass without distraction while fraudsters avoid the spotlight.
 
           .content-section__border
-            %div.field.is-horizontal
-              %div.field-label.is-normal
-                %label.label{for: 'service_name'} Service Name
-              .field-body
-                .field.is-narrow
-                  .control
-                    %input#service_name{type: 'text', placeholder: 'Enter Service Name', class: 'input'}
+            = form_with url: admin_verified_identity_path, method: :post, local: true do |form|
+              %div.field.is-horizontal
+                %div.field-label.is-normal
+                  %label.label{for: 'service_name'} Service Name
+                .field-body
+                  .field.is-narrow
+                    .control
+                      = form.text_field :service_name, id: 'service_name', class: 'input', placeholder: 'Enter Service Name'
 
-            %div.field.is-horizontal
-              %div.field-label.is-normal
-                %label.label{for: 'private_key'} Private Key
-              .field-body
-                .field.is-narrow
-                  .control
-                    %input#private_key{type: 'text', placeholder: 'Enter Private Key', class: 'input'}
+              %div.field.is-horizontal
+                %div.field-label.is-normal
+                  %label.label{for: 'private_key'} Private Key
+                .field-body
+                  .field.is-narrow
+                    .control
+                      = form.text_field :private_key, id: 'private_key', class: 'input', placeholder: 'Enter Private Key'
 
-            %div.field.is-horizontal
-              %div.field-label.is-normal
-                %label.label{for: 'enable_verified_identity'} Enable Verified Identity
-              .field-body
-                .field.is-narrow
-                  .control
-                    %label.checkbox
-                      %input#enable_verified_identity{type: 'checkbox'}
-                      Turn On/Off
+              %div.field.is-horizontal
+                %div.field-label.is-normal
+                  %label.label{for: 'enable_verified_identity'} Enable Verified Identity
+                .field-body
+                  .field.is-narrow
+                    .control
+                      %label.checkbox
+                        = form.check_box :enable_verified_identity, id: 'enable_verified_identity'
+                        Turn On/Off
 
+              %div.field.is-horizontal
+                %div.field-label.is-normal
+                  %label.label{for: 'enable_unknown_badge'} Enable "Unknown" Badge State
+                .field-body
+                  .field.is-narrow
+                    .control
+                      %label.checkbox
+                        = form.check_box :enable_unknown_badge, id: 'enable_unknown_badge'
+                        Turn On/Off
 
-            %div.field.is-horizontal
-              %div.field-label.is-normal
-                %label.label{for: 'enable_unknown_badge'} Enable "Unknown" Badge State
-              .field-body
-                .field.is-narrow
-                  .control
-                    %label.checkbox
-                      %input#enable_unknown_badge{type: 'checkbox'}
-                      Turn On/Off
-
-
-        = yield
-
-    .sidebar-wrapper.sidebar-wrapper--empty
-
+              .actions
+                = form.submit 'Save', class: 'btn btn-primary'
