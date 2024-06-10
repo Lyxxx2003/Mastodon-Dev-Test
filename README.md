@@ -1,2 +1,4 @@
 # Mastodon-Dev-Test
-a test for bruno and our internal team
+To clear local database, `bundle exec rails db:setup`
+
+To run the project in localhost:3000, run: `foreman start -f Procfile.dev`
